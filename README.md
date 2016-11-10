@@ -1,2 +1,6 @@
 # SistemaNaafa
 A proyect from school.
+# Configuración
+....
+# Instalacion
+....
