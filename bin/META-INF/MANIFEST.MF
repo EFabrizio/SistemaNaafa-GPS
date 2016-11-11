@@ -27,5 +27,4 @@ Bundle-DocURL: http://commons.apache.org/pool/
 Include-Resource: META-INF/LICENSE.txt=LICENSE.txt,META-INF/NOTICE.txt
  =NOTICE.txt
 Bundle-SymbolicName: org.apache.commons.pool
-Import-Package: javax.swing
 

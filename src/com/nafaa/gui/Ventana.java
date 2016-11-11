@@ -20,6 +20,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import com.nafaa.Settings;
 import com.nafaa.database.Database;
 import com.nafaa.gui.admin.ModificarUsuarios;
 import com.nafaa.gui.auxiliar.AgendarCitaAuxiliar;
@@ -52,9 +53,13 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import java.util.Set;
 
 import javax.swing.SwingConstants;
 
+/**
+ * Ventana princial del proyecto.
+ */
 public class Ventana extends JFrame implements MouseListener,ActionListener {
     
 	private static final long serialVersionUID = 1L;
@@ -75,14 +80,11 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 	private JLabel lblUsuario;
 	private JLabel lblContrasea;
 	
-	/**
-	 * QUE PACIENTE Y QUE MEDICO AL LOGEARSE
-         * estoy con LorenaHerr como Paciente estaba haciendo pruebas, ya corregí la consulta para que agregue a citas 
-	 */
+
 	public static String idUsuario;
 	
 	
-	/**
+	/*
 	 * Paneles
 	 */
 	private PanelInventario inventario;
@@ -92,8 +94,9 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 	private PanelAuxiliar auxiliar;
 	private ActualizarDato actualiza;
 
+
 	/**
-	 * Launch the application.
+	 * Inicio de la aplicación.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -109,26 +112,25 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 	}
 
 	public Ventana() {
-		setTitle("Sistema Médico NAFAA");
+		setTitle(Settings.TITULO_PROYECTO);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setResizable(false);
-		setSize(500,500);
+		setSize(Settings.ALTO_PANTALLA,Settings.ANCHO_PANTALLA);
 		setLocationRelativeTo(null);
 		setFocusable(true);
 		initPanels();
 		initComponents();
 		initDatabase();
-                this.pack(); 
+		this.pack();
 	}
-	
+
+	/**
+	 * 	Inicia la conexion a la base de datos.
+	 */
 	private void initDatabase() {
-	/*Alexia*/ 	//Database.getDatabase().conectar("jdbc:mysql://localhost:3306/Naafa_corp","root", JOptionPane.showInputDialog(this, "El password de la base de datos\npara no cambiar el codigo acada rato\n cuando cada quien lo corra escriba su propio password\n solo temporal"));
-        //si estamos trabajando con enlina para no tener sobre escritura y no nos marque ese error de conexión
-        
-        /*Nogay*/     Database.getDatabase().conectar("jdbc:mysql://localhost:3307/Naafa_corp","root", "aapn941015");
-        /*Oliver*/    //Database.getDatabase().conectar("jdbc:mysql://localhost:3306/Naafa_corp","root", "66drmcmU");  
-        
+        Database.getDatabase().conectar("jdbc:mysql://172.81.178.20:3306/Naafa_corp","root", "Alexia123");
 	}
+
 
 	private void initPanels() {
 		inventario = new PanelInventario();
@@ -157,7 +159,7 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 
 	private void initComponents() {
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(192, 192, 192));
+		contentPane.setBackground(new Color(255,255,255));
 		setContentPane(contentPane);
 		
 		setPanel(new JPanel());
@@ -168,8 +170,8 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 		
 		button_1 = new JButton("Acceder");
 		button_1.addActionListener(this);
-		button_1.setForeground(new Color(0, 0, 0));
-		button_1.setBackground(new Color(240, 230, 140));
+		button_1.setForeground(new Color(255, 255,255));
+		button_1.setBackground(new Color(153, 179, 255));
 		
 		usuario = new JTextField();
 		usuario.setColumns(10);
@@ -250,14 +252,14 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 		);
 		getPanel().setLayout(gl_panel);
 		
-		lblSistemaMdicoNaafa = new JLabel("Sistema Médico NAAFA");
+		lblSistemaMdicoNaafa = new JLabel(Settings.TITULO_PROYECTO);
 		lblSistemaMdicoNaafa.setBackground(new Color(192, 192, 192));
 		lblSistemaMdicoNaafa.setBorder(new EmptyBorder(13,13,13,13));
 		lblSistemaMdicoNaafa.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSistemaMdicoNaafa.setFont(new Font("Dialog", Font.BOLD, 21));
 		
-		setLbleresNuevoRegistrate(new JLabel("Registrate."));
-		getLbleresNuevoRegistrate().setForeground(new Color(0, 0, 0));
+		setLbleresNuevoRegistrate(new JLabel("¿Eres nuevo? Registrate"));
+		getLbleresNuevoRegistrate().setForeground(new Color(0, 92, 230));
 		getLbleresNuevoRegistrate().setBorder(new EmptyBorder(13,0,13,0));
 		getLbleresNuevoRegistrate().setHorizontalAlignment(SwingConstants.CENTER);
 		getLbleresNuevoRegistrate().addMouseListener(this);
