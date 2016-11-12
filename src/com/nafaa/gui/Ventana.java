@@ -41,26 +41,20 @@ import com.nafaa.gui.paciente.Registro_Paciente;
 import com.nafaa.util.Secure;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 import java.awt.Font;
 import java.awt.BorderLayout;
-import java.util.Set;
-
 import javax.swing.SwingConstants;
 
 /**
  * Ventana princial del proyecto.
  */
-public class Ventana extends JFrame implements MouseListener,ActionListener {
+public class Ventana extends JFrame implements MouseListener,ActionListener,KeyListener {
     
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -175,8 +169,10 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 		
 		usuario = new JTextField();
 		usuario.setColumns(10);
+		usuario.addKeyListener(this);
 		
 		passwordField = new JPasswordField();
+		passwordField.addKeyListener(this);
 		
 		JButton button_2 = new JButton();
 		button_2.setVerticalAlignment(SwingConstants.TOP);
@@ -406,71 +402,78 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 
 	public void mouseExited(MouseEvent e) {}
 
-	public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == reg.getjButton2()){
-            remove(reg.todo);
-            getLbleresNuevoRegistrate().setVisible(true);
-            getContentPane().add(getPanel(),BorderLayout.CENTER);
-            revalidate();
-            repaint();
-            setSize(500,500);
-			} if(e.getSource() == button_1){
-				
-				String hash = "";
-				try {
-					hash = Secure.getHashCodeFromString(passwordField.getText());
-				} catch (NoSuchAlgorithmException e1) {
-					e1.printStackTrace();
+	public void functionButton1(){
+			String hash = "";
+			try {
+				hash = Secure.getHashCodeFromString(passwordField.getText());
+			} catch (NoSuchAlgorithmException e1) {
+				e1.printStackTrace();
+			}
+
+			int count = Database.getDatabase().queryDMLSize("SELECT Nombre_Usuario,Contraseña FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
+			String nombre = Database.getDatabase().queryDMLExtract("NombreCompleto","SELECT Paciente.NombreCompleto FROM Naafa_corp.Usuario,Naafa_corp.Paciente WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"' AND Usuario.idUsuario = Paciente.idUsuario");
+			idUsuario = Database.getDatabase().queryDMLExtract("idUsuario","SELECT idUsuario FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
+			String tipoUsuario = Database.getDatabase().queryDMLExtract("Tipo","SELECT * FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
+			if(count > 0){
+				principal.getLblBienvenido().setText("Bienvenido "+tipoUsuario+", "+nombre);
+				remove(getPanel());
+				getLbleresNuevoRegistrate().setVisible(false);
+				lblSistemaMdicoNaafa.setVisible(false);
+				contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+				setLocationRelativeTo(null);
+				setSize(900,600);
+				getContentPane().add(principal,BorderLayout.CENTER);
+				//Cargar los componentes para cada Usuario.
+				switch(tipoUsuario){
+					case "Administrador":
+					case "ADMINISTRADOR":
+						principal.add(principal.getPanelAdmin(),BorderLayout.NORTH);
+						break;
+					case "Paciente":
+					case "paciente":
+					case "PACIENTE":
+						principal.add(paciente,BorderLayout.NORTH);
+						break;
+					case "Auxiliar":
+					case "AUXILIAR":
+						principal.add(auxiliar,BorderLayout.NORTH);
+						break;
+					case "Laboratorista":
+					case "LABORATORISTA":
+						principal.add(laboratorista,BorderLayout.NORTH);
+						break;
+					case "Farmaceutico":
+					case "FARMACEUTICO":
+						principal.add(inventario,BorderLayout.NORTH);
+						break;
+					case "Medico":
+					case "MEDICO":
+						principal.add(medico,BorderLayout.NORTH);
+						break;
 				}
-				
-				int count = Database.getDatabase().queryDMLSize("SELECT Nombre_Usuario,Contraseña FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
-				String nombre = Database.getDatabase().queryDMLExtract("NombreCompleto","SELECT Paciente.NombreCompleto FROM Naafa_corp.Usuario,Naafa_corp.Paciente WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"' AND Usuario.idUsuario = Paciente.idUsuario");
-				idUsuario = Database.getDatabase().queryDMLExtract("idUsuario","SELECT idUsuario FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
-				String tipoUsuario = Database.getDatabase().queryDMLExtract("Tipo","SELECT * FROM Naafa_corp.Usuario WHERE Nombre_Usuario='"+usuario.getText()+"' AND Contraseña='"+passwordField.getText()+"'");
-				if(count > 0){
-			principal.getLblBienvenido().setText("Bienvenido "+tipoUsuario+", "+nombre);
-            remove(getPanel());
-            getLbleresNuevoRegistrate().setVisible(false);
-            lblSistemaMdicoNaafa.setVisible(false); 
-            contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-            setLocationRelativeTo(null);
-            setSize(900,600);
-            getContentPane().add(principal,BorderLayout.CENTER);
-            //Cargar los componentes para cada Usuario.
-            switch(tipoUsuario){
-            case "Administrador":
-            case "ADMINISTRADOR":
-            	principal.add(principal.getPanelAdmin(),BorderLayout.NORTH);
-            	break;
-            case "Paciente":
-            case "paciente":
-            case "PACIENTE":
-            	principal.add(paciente,BorderLayout.NORTH);
-            	break;
-            case "Auxiliar":
-            case "AUXILIAR":
-            	principal.add(auxiliar,BorderLayout.NORTH);
-            	break;
-            case "Laboratorista":
-            case "LABORATORISTA":
-            	principal.add(laboratorista,BorderLayout.NORTH);
-            	break;
-            case "Farmaceutico":
-            case "FARMACEUTICO":
-            	principal.add(inventario,BorderLayout.NORTH);
-            	break;
-            case "Medico":
-            case "MEDICO":
-            	principal.add(medico,BorderLayout.NORTH);
-            	break;
-            }
-            revalidate();
-            repaint();
+				revalidate();
+				repaint();
 			} else{
 				JOptionPane.showMessageDialog(this, "Usuario o contraseña invalida.","ERROR",JOptionPane.ERROR_MESSAGE);
 				getLblUsuarioRegistradoCon().setForeground(Color.red);
 			}
-		}
+
+	}
+
+	public  void functionButton2(){
+		remove(reg.todo);
+		getLbleresNuevoRegistrate().setVisible(true);
+		getContentPane().add(getPanel(),BorderLayout.CENTER);
+		revalidate();
+		repaint();
+		setSize(500,500);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == reg.getjButton2())
+            	functionButton2();
+			if(e.getSource() == button_1)
+				functionButton1();
 	}
 
 	public JPanel getPanel() {
@@ -496,4 +499,15 @@ public class Ventana extends JFrame implements MouseListener,ActionListener {
 	public void setLblUsuarioRegistradoCon(JLabel lblUsuarioRegistradoCon) {
 		this.lblUsuarioRegistradoCon = lblUsuarioRegistradoCon;
 	}
+
+
+
+	public void keyTyped(KeyEvent e) {}
+
+	public void keyPressed(KeyEvent e) {
+		if((e.getSource()==usuario | e.getSource()==passwordField) & e.getKeyCode()==KeyEvent.VK_ENTER)
+				functionButton1();
+	}
+
+	public void keyReleased(KeyEvent e) {}
 }
