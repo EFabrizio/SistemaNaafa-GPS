@@ -35,8 +35,7 @@ public class Database {
 	
 	
 	
-	private Database(){
-	}
+	private Database(){}
 	
 	/**
 	 * 

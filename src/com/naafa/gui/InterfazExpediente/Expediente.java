@@ -1,6 +1,8 @@
 package InterfazExpediente;
 
 
+import com.panel.Fecha;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -40,7 +42,7 @@ public class Expediente extends javax.swing.JPanel {
         txtdiagnostico = new javax.swing.JTextArea();
         lbmotivo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        fecha1 = new panel.Fecha();
+        fecha1 = new Fecha();
         btnSalir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtenfer = new javax.swing.JTextArea();
@@ -229,7 +231,7 @@ public class Expediente extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnSalir;
-    private panel.Fecha fecha1;
+    private Fecha fecha1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

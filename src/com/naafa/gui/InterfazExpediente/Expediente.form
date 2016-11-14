@@ -175,7 +175,7 @@
         <Property name="text" type="java.lang.String" value="EXPEDIENTE MEDICO "/>
       </Properties>
     </Component>
-    <Component class="panel.Fecha" name="fecha1">
+    <Component class="Fecha" name="fecha1">
     </Component>
     <Component class="javax.swing.JButton" name="btnSalir">
       <Properties>
